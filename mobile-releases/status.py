@@ -192,6 +192,66 @@ def play_listing(route):
         return f"[Store page](https://play.google.com/store/apps/details?id={package}) · unverified"
     return UNKNOWN
 
+# Keep the full provider evidence in the technical section; the overview is
+# deliberately plain text, with no routine per-cell dates, IDs or workflow URLs.
+STAMP_LINK = re.compile(r" \[(\d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC)( · stale)?\]\(https://github\.com/killjoy00/[A-Za-z0-9_.-]+/actions/runs/[0-9]+\)")
+TEXT_LINK = re.compile(r"\[([^\[\]]+)\]\(https://[^)\s]+\)")
+SHORT_STATUS = {
+    "No ready-for-distribution version returned": "Not live",
+    "No pending version returned": "None",
+    "No recent iOS build returned": "None",
+    "No active releases returned": "None",
+    "Awaiting store check": "Check needed",
+    "Track check unavailable": "Check needed",
+    "Apple check unavailable": "Check needed",
+    "App record not returned": "App not found",
+    "Store verification not configured": "Not set up",
+    "Not tracked": "—",
+    "Not verified": "Check needed",
+    "Identity not verified": "Check needed",
+}
+PHRASES = (
+    (" (US listing)", ""),
+    (" ready for distribution (ASC)", " (ready)"),
+    (" ready for sale (ASC)", " (ready)"),
+    (" in beta testing", ""),
+    (" waiting for review", " · Waiting"),
+    (" in review", " · In review"),
+    (" approved; developer release pending", " · Approved; release pending"),
+    (" draft, not available", " (draft)"),
+    (" published on track", ""),
+    (" ready; distribution not confirmed", " · Ready, not testing"),
+    (" uploaded; testing not confirmed", " · Uploaded, testing unknown"),
+    ("tester availability not confirmed", "testing unknown"),
+    ("active tester version not checked", "active build unknown"),
+)
+
+def compact_cell(value):
+    stale = any(m.group(2) for m in STAMP_LINK.finditer(value))
+    value = STAMP_LINK.sub("", value)
+    value = TEXT_LINK.sub(r"\1", value)
+    value = SHORT_STATUS.get(value, value)
+    for original, replacement in PHRASES:
+        value = value.replace(original, replacement)
+    value = re.sub(r"\bCode (?=[0-9])", "Build ", value)
+    # Keep historical observation dates; they are not fresh daily observations.
+    return value + (" (stale)" if stale else "")
+
+def overview(rows, now):
+    lines = [
+        f"**Updated:** {now} UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)",
+        "", "### Store releases", "",
+        "| App | iOS live | TestFlight | iOS review | Play production | Play testing |",
+        "|---|---|---|---|---|---|",
+    ]
+    for app, values in rows:
+        lines.append(f"| [{app['name']}](https://github.com/{app['source']}) | " + " | ".join(compact_cell(v) for v in values) + " |")
+    lines += [
+        "",
+        "— = not tracked. TestFlight shows version (build). Play shows build numbers and track status, not rollout to every region. A draft is not available to testers. Older checks keep their date or a stale label; check needed means the status is unknown.",
+    ]
+    return lines
+
 def homepage(registry, fetch, fetch_text, now):
     apps = validate_registry(registry)
     sources = {}
@@ -199,15 +259,17 @@ def homepage(registry, fetch, fetch_text, now):
         repo = app.get("status_repo")
         if repo in store_status.TRUSTED_PUBLISHERS and repo not in sources:
             sources[repo] = store_status.snapshots(repo,fetch)
-    lines = [
-        f"**Last checked:** {now} UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)",
-        "", "### Store releases", "",
-        "| App | iOS public / ASC status | TestFlight | Apple review | Google Play production | Play internal testing |",
-        "|---|---|---|---|---|---|"]
+    rows = []
     for app in apps:
         ios = app["ios"]
         apple_doc, play_doc = sources.get(app.get("status_repo"), (None, None))
-        values = store_status.cells(app, apple_doc, play_doc, apple_public(ios, fetch), now)
+        rows.append((app, store_status.cells(app, apple_doc, play_doc, apple_public(ios, fetch), now)))
+    lines = overview(rows, now)
+    lines += ["", "<details>", "<summary>Technical details and release evidence</summary>", "",
+              "### Store verification details", "",
+              "| App | iOS public / ASC status | TestFlight | Apple review | Google Play production | Play internal testing |",
+              "|---|---|---|---|---|---|"]
+    for app, values in rows:
         lines.append(f"| [{app['name']}](https://github.com/{app['source']}) | " + " | ".join(values) + " |")
     lines += ["", "US Apple listings and dated provider checks are separate. Play published-on-track status may include staged or halted rollouts; it is not proof of universal public availability. Each dated result links to its evidence; provider observations older than 36 hours are marked stale. **Awaiting store check** means evidence is missing; **Not tracked** means no configured route, not a claim the app does not exist.",
               "", "### Development and next release", "",
@@ -227,7 +289,7 @@ def homepage(registry, fetch, fetch_text, now):
               "|---|---|---|"]
     for app in apps:
         lines.append(f"| {app['name']} | {workflow_run(app['ios'], fetch)} | {workflow_run(app['android'], fetch)} |")
-    lines += ["", "A successful workflow is not proof of store delivery; signed/uploaded, processing, review submission and tester availability require separate evidence."]
+    lines += ["", "A successful workflow is not proof of store delivery; signed/uploaded, processing, review submission and tester availability require separate evidence.", "", "</details>"]
     return "\n".join(lines) + "\n"
 
 def replace_dashboard(readme, report):

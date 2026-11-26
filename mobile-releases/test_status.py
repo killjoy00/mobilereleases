@@ -112,6 +112,30 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(store_status.issue_snapshots({"number":1866,"body":body}),(None,None))
         self.assertEqual(store_status.issue_snapshots({"number":1867,"body":body+body}),(None,None))
 
+    def test_compact_overview_preserves_release_distinctions(self):
+        stamp = " [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/123)"
+        self.assertEqual(status.compact_cell("1.4 (1044) in beta testing"+stamp),"1.4 (1044)")
+        self.assertEqual(status.compact_cell("Code 14 draft, not available; Code 2 published on track"+stamp),"Build 14 (draft); Build 2")
+        self.assertEqual(status.compact_cell("1.0 waiting for review"+stamp),"1.0 · Waiting")
+        self.assertEqual(status.compact_cell("No ready-for-distribution version returned"+stamp),"Not live")
+        self.assertEqual(status.compact_cell("Track check unavailable"+stamp),"Check needed")
+        self.assertEqual(status.compact_cell("Not tracked"),"—")
+        self.assertEqual(status.compact_cell("1.5 (US listing)"),"1.5")
+        self.assertEqual(status.compact_cell("1.4 (1044) in beta testing"+stamp.replace("UTC]","UTC · stale]")),"1.4 (1044) (stale)")
+        self.assertIn("Nov 19",status.compact_cell(store_status.HISTORICAL["pack-one"]["beta"]))
+
+    def test_overview_hides_technical_tables_by_default(self):
+        report=status.homepage(self.registry,lambda _:None,lambda _:None,"2026-11-26 00:00")
+        visible,details=report.split("<details>",1)
+        self.assertEqual(visible.count("| App |"),1)
+        self.assertNotIn("source |",visible)
+        self.assertNotIn("request |",visible)
+        self.assertNotIn("actions/runs/",visible)
+        self.assertIn("Technical details and release evidence",details)
+        self.assertIn("### Development and next release",details)
+        self.assertIn("### Build and submission evidence",details)
+        self.assertTrue(report.rstrip().endswith("</details>"))
+
     def test_malformed_evidence(self):
         route = {"repo":"killjoy00/EZTrivia","workflow":"testflight.yml"}
         self.assertEqual(status.workflow_run(route, lambda _: {"workflow_runs":[{"id":"bad","conclusion":"success"}]}), status.UNKNOWN)
