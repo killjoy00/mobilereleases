@@ -1,0 +1,3 @@
+# Portfolio mobile release instructions
+
+Read [README.md](README.md) and [mobile-releases/apps.json](mobile-releases/apps.json) for the registry and agent request contract. This repo is read-only with respect to stores and other repositories: never add signing credentials, store access keys, production publishing workflows, or raw store responses. Keep reporting sanitized; separate requested, built, uploaded, processed, available in testing, submitted and live. Existing app-specific release gates and explicit production authorization always prevail. Use reviewed PRs and tests; do not merge with pending or failing required checks.
