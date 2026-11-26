@@ -26,7 +26,8 @@
           "path": "mobile/store-release.json",
           "key": "playVersionName"
         }
-      }
+      },
+      "status_repo": "killjoy00/mtg-ev-analyzer"
     },
     {
       "id": "ez-trivia",
@@ -52,7 +53,8 @@
           "path": "android/app/build.gradle.kts",
           "pattern": "versionName\\s*=\\s*releaseVersionName\\s*\\?:\\s*\"([0-9.]+(?:-alpha[0-9]+)?)\""
         }
-      }
+      },
+      "status_repo": "killjoy00/EZTrivia"
     },
     {
       "id": "gold-rush",
@@ -65,7 +67,8 @@
         "development": {
           "path": "App/GoldRush.xcodeproj/project.pbxproj",
           "pattern": "MARKETING_VERSION\\s*=\\s*([0-9.]+)\\s*;"
-        }
+        },
+        "bundle": "com.killjoy00.goldrush"
       },
       "android": {
         "repo": "killjoy00/GoldRush",
@@ -77,7 +80,8 @@
           "path": "Android/app/build.gradle.kts",
           "pattern": "versionName\\s*=\\s*\"([0-9.]+)\""
         }
-      }
+      },
+      "status_repo": "killjoy00/GoldRush"
     },
     {
       "id": "ultimate-ttt",
@@ -102,7 +106,8 @@
           "path": "android/app/build.gradle.kts",
           "pattern": "versionName\\s*=\\s*releaseVersionName\\s*\\?:\\s*\"([0-9.]+)\""
         }
-      }
+      },
+      "status_repo": "killjoy00/EZTrivia"
     },
     {
       "id": "star-run",
@@ -129,7 +134,8 @@
           "path": "export_presets.cfg",
           "pattern": "version/name=\"([0-9.]+)\""
         }
-      }
+      },
+      "status_repo": "killjoy00/EZTrivia"
     },
     {
       "id": "ministry",
@@ -154,7 +160,8 @@
           "path": "export_presets.cfg",
           "pattern": "version/name=\"([0-9.]+)\""
         }
-      }
+      },
+      "status_repo": "killjoy00/EZTrivia"
     },
     {
       "id": "starport",
@@ -173,7 +180,8 @@
       },
       "android": {
         "note": "No signed Android release route verified."
-      }
+      },
+      "status_repo": "killjoy00/EZTrivia"
     },
     {
       "id": "stuffy-land",
@@ -192,7 +200,8 @@
       },
       "android": {
         "note": "No signed Android release route verified."
-      }
+      },
+      "status_repo": "killjoy00/EZTrivia"
     },
     {
       "id": "food-finder",
