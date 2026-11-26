@@ -4,13 +4,33 @@ All ten apps, in one place. View current status directly here.
 
 <!-- dashboard:start -->
 
-**Last checked:** 2026-11-26 21:00 UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)
+**Updated:** 2026-11-26 21:16 UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)
 
 ### Store releases
 
+| App | iOS live | TestFlight | iOS review | Play production | Play testing |
+|---|---|---|---|---|---|
+| [Pack One](https://github.com/killjoy00/mtg-ev-analyzer) | 1.5 | 1.5 (101309) | 1.6 draft | Build 101224 | Build 101224 (draft); Build 101200 |
+| [EZ Trivia](https://github.com/killjoy00/EZTrivia) | 1.4 | 1.4.0 (37) | None | Build 12 | Build 12 |
+| [Gold Rush](https://github.com/killjoy00/GoldRush) | 1.5 | 1.5 (1028) | None | Build 4 | Build 4 |
+| [Ultimate Tic/Tac/Toe](https://github.com/killjoy00/Ultttt) | Not live | 1.0 (100010) | 1.0 · Waiting | Build 10 | Build 10 |
+| [Star/Run](https://github.com/killjoy00/StarRun) | Not live | 1.4 (1044) | 1.0 · Waiting | Build 14 | Build 14 (draft); Build 2 |
+| [Ministry](https://github.com/killjoy00/ministry) | Not live | 1.0 (1005) | 1.0 draft | Check needed | Build 4 |
+| [Starport](https://github.com/killjoy00/Starport) | Not live | 0.4.0 (100009) | 1.0 draft | — | — |
+| [Stuffy Land](https://github.com/killjoy00/Starport) | Not live | 0.1.4 (100009) | 1.0 draft | — | — |
+| [Food Finder](https://github.com/killjoy00/foodfinder) | Not set up | Not set up | Not set up | — | — |
+| [TurnPro](https://github.com/killjoy00/TurnPro) | — | — | — | — | — |
+
+— = not tracked. TestFlight shows version (build). Play shows build numbers and track status, not rollout to every region. A draft is not available to testers. Older checks keep their date or a stale label; check needed means the status is unknown.
+
+<details>
+<summary>Technical details and release evidence</summary>
+
+### Store verification details
+
 | App | iOS public / ASC status | TestFlight | Apple review | Google Play production | Play internal testing |
 |---|---|---|---|---|---|
-| [Pack One](https://github.com/killjoy00/mtg-ev-analyzer) | 1.5 (US listing) | [1.4 (101135), in beta testing · Nov 19](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/44459578296) | Awaiting store check | [101224 submitted for review · Nov 26](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45762020071); [public app owner-confirmed Nov 19](https://github.com/killjoy00/mtg-ev-analyzer/issues/575) | [101224 draft · Nov 26](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45762020071); active tester version not checked |
+| [Pack One](https://github.com/killjoy00/mtg-ev-analyzer) | 1.5 (US listing) | 1.5 (101309) in beta testing [2026-11-26 21:03 UTC](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45894574373) | 1.6 draft [2026-11-26 21:03 UTC](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45894574373) | Code 101224 published on track [2026-11-26 21:03 UTC](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45894574373) | Code 101224 draft, not available; Code 101200 published on track [2026-11-26 21:03 UTC](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45894574373) |
 | [EZ Trivia](https://github.com/killjoy00/EZTrivia) | 1.4 (US listing) | 1.4.0 (37) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | No pending version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 12 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 12 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
 | [Gold Rush](https://github.com/killjoy00/GoldRush) | 1.5 (US listing) | 1.5 (1028) in beta testing [2026-11-26 20:53 UTC](https://github.com/killjoy00/GoldRush/actions/runs/45893670733) | No pending version returned [2026-11-26 20:53 UTC](https://github.com/killjoy00/GoldRush/actions/runs/45893670733) | Code 4 published on track [2026-11-26 20:53 UTC](https://github.com/killjoy00/GoldRush/actions/runs/45893670733) | Code 4 published on track [2026-11-26 20:53 UTC](https://github.com/killjoy00/GoldRush/actions/runs/45893670733) |
 | [Ultimate Tic/Tac/Toe](https://github.com/killjoy00/Ultttt) | No ready-for-distribution version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 (100010) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 waiting for review [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 10 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 10 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
@@ -56,6 +76,8 @@ Source versions are configuration values on main (possibly overridden by release
 | TurnPro | Route not verified | Route not verified |
 
 A successful workflow is not proof of store delivery; signed/uploaded, processing, review submission and tester availability require separate evidence.
+
+</details>
 
 <!-- dashboard:end -->
 
