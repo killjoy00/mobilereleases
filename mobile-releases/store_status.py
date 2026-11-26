@@ -178,6 +178,11 @@ def cells(app,apple_doc,play_doc,public,now=None):
     ia=("Awaiting store check" if app.get("status_repo") else "Store verification not configured") if ios_tracked else "Not tracked"
     ga=("Awaiting store check" if app.get("status_repo") else "Store verification not configured") if play_tracked else "Not tracked"
     public=public if public not in ("Not verified","Identity not verified") else (asc or ia)
-    production=play(play_doc,aid,android.get("package"),"production",repo,now) or old.get("play_production") or ga
+    production=play(play_doc,aid,android.get("package"),"production",repo,now)
+    # Owner confirmed Ministry is Android testing-only on 2026-11-26.
+    # A later successful provider check always takes precedence.
+    if aid=="ministry" and android.get("package")=="org.killjoy00.ministry" and (production is None or production.startswith("Track check unavailable")):
+        production="Not live (owner confirmed Nov 26)"
+    production=production or old.get("play_production") or ga
     internal=play(play_doc,aid,android.get("package"),"internal",repo,now) or old.get("play_internal") or ga
     return public,beta or old.get("beta") or ia,review or ia,production,internal
