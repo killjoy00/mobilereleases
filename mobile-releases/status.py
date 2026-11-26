@@ -194,8 +194,11 @@ def play_listing(route):
 
 def homepage(registry, fetch, fetch_text, now):
     apps = validate_registry(registry)
-    apple_doc = fetch(store_status.APPLE_URL)
-    play_doc = fetch(store_status.PLAY_URL)
+    sources = {}
+    for app in apps:
+        repo = app.get("status_repo")
+        if repo in store_status.TRUSTED_PUBLISHERS and repo not in sources:
+            sources[repo] = tuple(fetch(store_status.snapshot_url(repo,p)) for p in ("apple","play"))
     lines = [
         f"**Last checked:** {now} UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)",
         "", "### Store releases", "",
@@ -203,9 +206,10 @@ def homepage(registry, fetch, fetch_text, now):
         "|---|---|---|---|---|---|"]
     for app in apps:
         ios = app["ios"]
-        values = store_status.cells(app, apple_doc, play_doc, apple_public(ios, fetch))
+        apple_doc, play_doc = sources.get(app.get("status_repo"), (None, None))
+        values = store_status.cells(app, apple_doc, play_doc, apple_public(ios, fetch), now)
         lines.append(f"| [{app['name']}](https://github.com/{app['source']}) | " + " | ".join(values) + " |")
-    lines += ["", "US Apple listings and dated provider checks are separate. Play published-on-track status may include staged or halted rollouts; it is not proof of universal public availability. Each dated result links to its evidence. **Awaiting store check** means evidence is missing; **Not tracked** means no configured route, not a claim the app does not exist.",
+    lines += ["", "US Apple listings and dated provider checks are separate. Play published-on-track status may include staged or halted rollouts; it is not proof of universal public availability. Each dated result links to its evidence; provider observations older than 36 hours are marked stale. **Awaiting store check** means evidence is missing; **Not tracked** means no configured route, not a claim the app does not exist.",
               "", "### Development and next release", "",
               "| App | iOS source | iOS request | Android source | Android request |",
               "|---|---|---|---|---|"]

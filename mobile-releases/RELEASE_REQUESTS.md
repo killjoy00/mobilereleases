@@ -16,3 +16,7 @@ Report source, signed build, upload, processing, testing track/group availabilit
 All ten apps are registered, including two separate iOS identities sharing Starport's repo. EZTrivia and Star/Run are the first pilot; app-specific publishing infrastructure remains unchanged. Gold Rush's configured Apple bundle can be overridden, so its public identity is not assumed. Ultimate Tic/Tac/Toe's version-specific Android adapters need separate review. Food Finder and TurnPro are not assumed to have store-ready releases.
 
 No new paid services or libraries. Run offline validation with `python3 -m unittest discover -s mobile-releases -p 'test_*.py'`. The dashboard workflow runs those tests before making a read-only refresh. Authenticated store read-back, credential health checks, production release routing and measured CI savings are follow-up work, not implemented by this pilot.
+
+## Store status sources
+
+The dashboard reads strictly validated public release-status snapshots from the repository that owns the app's credentials. EZTrivia serves its shared apps; Pack One and Gold Rush serve their own. No credential is copied to the tracker. Each provider observation has its own verification time and workflow link; evidence more than 36 hours old is marked stale. Gold Rush's configured default bundle must match the actual verified app record before reporting a version. Android status uses version codes because the direct store lifecycle API does not return a reliable marketing version name. Never infer one from source defaults or current requests.

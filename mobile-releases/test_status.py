@@ -83,6 +83,16 @@ class StatusTests(unittest.TestCase):
         self.assertIn("1.4 (1100) processing",beta)
         self.assertIn("1.3 in review",review)
 
+    def test_independent_snapshot_provenance_and_staleness(self):
+        doc={"schema_version":1,"checked_at":"2026-11-26T12:00:00Z","run_id":"123","apps":{"pack-one":{"bundle":"pro.packone.app"}}}
+        row, label=store_status.source(doc,"pack-one","bundle","pro.packone.app","killjoy00/mtg-ev-analyzer","2026-11-28 12:00")
+        self.assertEqual(row["bundle"],"pro.packone.app")
+        self.assertIn("stale",label)
+        self.assertIn("killjoy00/mtg-ev-analyzer/actions/runs/123",label)
+        self.assertEqual(store_status.source(doc,"pack-one","bundle","pro.packone.app","untrusted/repo"),(None,None))
+        self.assertEqual(store_status.source(doc,"pack-one","bundle","pro.packone.app","killjoy00/mtg-ev-analyzer","2026-11-25 12:00"),(None,None))
+        self.assertIsNone(store_status.snapshot_url("untrusted/repo","apple"))
+
     def test_malformed_evidence(self):
         route = {"repo":"killjoy00/EZTrivia","workflow":"testflight.yml"}
         self.assertEqual(status.workflow_run(route, lambda _: {"workflow_runs":[{"id":"bad","conclusion":"success"}]}), status.UNKNOWN)
