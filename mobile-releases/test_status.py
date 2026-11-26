@@ -93,6 +93,14 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(store_status.source(doc,"pack-one","bundle","pro.packone.app","killjoy00/mtg-ev-analyzer","2026-11-25 12:00"),(None,None))
         self.assertIsNone(store_status.snapshot_url("untrusted/repo","apple"))
 
+    def test_checked_but_not_live_or_unavailable(self):
+        apple_doc={"schema_version":1,"checked_at":"2026-11-26T12:00:00Z","run_id":"123","apps":{"star-run":{"bundle":"com.rsm.starrun","result":"ok","builds":[],"versions":[{"version":"1.0","state":"WAITING_FOR_REVIEW"}]}}}
+        public,beta,review=store_status.apple(apple_doc,"star-run","com.rsm.starrun")
+        self.assertIn("No ready-for-distribution version returned",public)
+        self.assertIn("1.0 waiting for review",review)
+        play_doc={"schema_version":1,"checked_at":"2026-11-26T12:00:00Z","run_id":"124","apps":{"ministry":{"package":"org.killjoy00.ministry","tracks":{"production":{"result":"unavailable","releases":[]}}}}}
+        self.assertIn("Track check unavailable",store_status.play(play_doc,"ministry","org.killjoy00.ministry","production"))
+
     def test_malformed_evidence(self):
         route = {"repo":"killjoy00/EZTrivia","workflow":"testflight.yml"}
         self.assertEqual(status.workflow_run(route, lambda _: {"workflow_runs":[{"id":"bad","conclusion":"success"}]}), status.UNKNOWN)
