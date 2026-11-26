@@ -4,24 +4,24 @@ All ten apps, in one place. View current status directly here.
 
 <!-- dashboard:start -->
 
-**Last checked:** 2026-11-26 20:26 UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)
+**Last checked:** 2026-11-26 20:31 UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)
 
 ### Store releases
 
 | App | iOS public / ASC status | TestFlight | Apple review | Google Play production | Play internal testing |
 |---|---|---|---|---|---|
 | [Pack One](https://github.com/killjoy00/mtg-ev-analyzer) | 1.5 (US listing) | [1.4 (101135), in beta testing · Nov 19](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/44459578296) | Awaiting store check | [101224 submitted for review · Nov 26](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45762020071); [public app owner-confirmed Nov 19](https://github.com/killjoy00/mtg-ev-analyzer/issues/575) | [101224 draft · Nov 26](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45762020071); active tester version not checked |
-| [EZ Trivia](https://github.com/killjoy00/EZTrivia) | 1.4 (US listing) | 1.4.0 (37) in beta testing [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | No pending version returned [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 12 published on track [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 12 published on track [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
-| [Gold Rush](https://github.com/killjoy00/GoldRush) | Awaiting store check | Awaiting store check | Awaiting store check | [No releases as of Sep 18](https://github.com/killjoy00/GoldRush/issues/53); fresh check needed | [1.5.1 (code 4) internal + closed testing · Sep 18](https://github.com/killjoy00/GoldRush/issues/53) |
-| [Ultimate Tic/Tac/Toe](https://github.com/killjoy00/Ultttt) | Awaiting store check | 1.0 (100010) in beta testing [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 waiting for review [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 10 published on track [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 10 published on track [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
-| [Star/Run](https://github.com/killjoy00/StarRun) | Awaiting store check | 1.4 (1044) in beta testing [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 waiting for review [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 14 published on track [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 14 draft, not available; Code 2 published on track [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
-| [Ministry](https://github.com/killjoy00/ministry) | Awaiting store check | 1.0 (1005) in beta testing [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 draft [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Awaiting store check | Code 4 published on track [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
-| [Starport](https://github.com/killjoy00/Starport) | Awaiting store check | 0.4.0 (100009) in beta testing [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 draft [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Not tracked | Not tracked |
-| [Stuffy Land](https://github.com/killjoy00/Starport) | Awaiting store check | 0.1.4 (100009) in beta testing [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 draft [2026-11-26](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Not tracked | Not tracked |
-| [Food Finder](https://github.com/killjoy00/foodfinder) | Awaiting store check | Awaiting store check | Awaiting store check | Not tracked | Not tracked |
+| [EZ Trivia](https://github.com/killjoy00/EZTrivia) | 1.4 (US listing) | 1.4.0 (37) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | No pending version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 12 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 12 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
+| [Gold Rush](https://github.com/killjoy00/GoldRush) | 1.5 (US listing) | Awaiting store check | Awaiting store check | [No releases as of Sep 18](https://github.com/killjoy00/GoldRush/issues/53); fresh check needed | [1.5.1 (code 4) internal + closed testing · Sep 18](https://github.com/killjoy00/GoldRush/issues/53) |
+| [Ultimate Tic/Tac/Toe](https://github.com/killjoy00/Ultttt) | No ready-for-distribution version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 (100010) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 waiting for review [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 10 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 10 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
+| [Star/Run](https://github.com/killjoy00/StarRun) | No ready-for-distribution version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.4 (1044) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 waiting for review [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Code 14 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 14 draft, not available; Code 2 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
+| [Ministry](https://github.com/killjoy00/ministry) | No ready-for-distribution version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 (1005) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 draft [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Track check unavailable [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) | Code 4 published on track [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809376) |
+| [Starport](https://github.com/killjoy00/Starport) | No ready-for-distribution version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 0.4.0 (100009) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 draft [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Not tracked | Not tracked |
+| [Stuffy Land](https://github.com/killjoy00/Starport) | No ready-for-distribution version returned [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 0.1.4 (100009) in beta testing [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | 1.0 draft [2026-11-26 20:24 UTC](https://github.com/killjoy00/EZTrivia/actions/runs/45890809516) | Not tracked | Not tracked |
+| [Food Finder](https://github.com/killjoy00/foodfinder) | Store verification not configured | Store verification not configured | Store verification not configured | Not tracked | Not tracked |
 | [TurnPro](https://github.com/killjoy00/TurnPro) | Not tracked | Not tracked | Not tracked | Not tracked | Not tracked |
 
-US Apple listings and dated provider checks are separate. Play published-on-track status may include staged or halted rollouts; it is not proof of universal public availability. Each dated result links to its evidence. **Awaiting store check** means evidence is missing; **Not tracked** means no configured route, not a claim the app does not exist.
+US Apple listings and dated provider checks are separate. Play published-on-track status may include staged or halted rollouts; it is not proof of universal public availability. Each dated result links to its evidence; provider observations older than 36 hours are marked stale. **Awaiting store check** means evidence is missing; **Not tracked** means no configured route, not a claim the app does not exist.
 
 ### Development and next release
 
@@ -44,14 +44,14 @@ Source versions are configuration values on main (possibly overridden by release
 
 | App | iOS release workflow | Android release workflow |
 |---|---|---|
-| Pack One | [success](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/45754322805) (2026-11-26) | [success](https://github.com/killjoy00/mtg-ev-analyzer/actions/runs/43925032404) (2026-11-16) |
-| EZ Trivia | [success](https://github.com/killjoy00/EZTrivia/actions/runs/44811434307) (2026-11-20) | Not verified |
-| Gold Rush | [success](https://github.com/killjoy00/GoldRush/actions/runs/34381862332) (2026-09-09) | [success](https://github.com/killjoy00/GoldRush/actions/runs/35396057156) (2026-09-18) |
-| Ultimate Tic/Tac/Toe | [success](https://github.com/killjoy00/EZTrivia/actions/runs/44330156632) (2026-11-18) | Route not verified |
-| Star/Run | [success](https://github.com/killjoy00/EZTrivia/actions/runs/45715832907) (2026-11-25) | [success](https://github.com/killjoy00/EZTrivia/actions/runs/45715832919) (2026-11-25) |
-| Ministry | [success](https://github.com/killjoy00/EZTrivia/actions/runs/44630462522) (2026-11-19) | [success](https://github.com/killjoy00/EZTrivia/actions/runs/44630462523) (2026-11-19) |
-| Starport | [success](https://github.com/killjoy00/EZTrivia/actions/runs/42909547240) (2026-11-10) | Route not verified |
-| Stuffy Land | [success](https://github.com/killjoy00/EZTrivia/actions/runs/42955989321) (2026-11-11) | Route not verified |
+| Pack One | Not verified | Not verified |
+| EZ Trivia | Not verified | Not verified |
+| Gold Rush | Not verified | Not verified |
+| Ultimate Tic/Tac/Toe | Not verified | Route not verified |
+| Star/Run | Not verified | Not verified |
+| Ministry | Not verified | Not verified |
+| Starport | Not verified | Route not verified |
+| Stuffy Land | Not verified | Route not verified |
 | Food Finder | Route not verified | Route not verified |
 | TurnPro | Route not verified | Route not verified |
 
