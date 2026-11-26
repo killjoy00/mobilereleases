@@ -101,6 +101,17 @@ class StatusTests(unittest.TestCase):
         play_doc={"schema_version":1,"checked_at":"2026-11-26T12:00:00Z","run_id":"124","apps":{"ministry":{"package":"org.killjoy00.ministry","tracks":{"production":{"result":"unavailable","releases":[]}}}}}
         self.assertIn("Track check unavailable",store_status.play(play_doc,"ministry","org.killjoy00.ministry","production"))
 
+    def test_packone_dedicated_issue_feed(self):
+        apple={"schema_version":1,"checked_at":"2026-11-26T12:00:00Z","run_id":"123","apps":{"pack-one":{"bundle":"pro.packone.app"}}}
+        body="<!-- portfolio-status:start -->\n"+chr(96)*3+"json\n"+json.dumps({"apple":apple})+"\n"+chr(96)*3+"\n<!-- portfolio-status:end -->"
+        issue={"number":1867,"body":body}
+        def fetch(url):
+            self.assertEqual(url,store_status.PACKONE_ISSUE_URL)
+            return issue
+        self.assertEqual(store_status.snapshots("killjoy00/mtg-ev-analyzer",fetch),(apple,None))
+        self.assertEqual(store_status.issue_snapshots({"number":1866,"body":body}),(None,None))
+        self.assertEqual(store_status.issue_snapshots({"number":1867,"body":body+body}),(None,None))
+
     def test_malformed_evidence(self):
         route = {"repo":"killjoy00/EZTrivia","workflow":"testflight.yml"}
         self.assertEqual(status.workflow_run(route, lambda _: {"workflow_runs":[{"id":"bad","conclusion":"success"}]}), status.UNKNOWN)
