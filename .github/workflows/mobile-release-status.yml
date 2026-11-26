@@ -1,4 +1,4 @@
-name: Mobile release status (read only)
+name: Mobile release dashboard
 
 on:
   workflow_dispatch:
@@ -6,6 +6,7 @@ on:
     - cron: '23 13 * * *'
   pull_request:
     paths:
+      - 'README.md'
       - 'mobile-releases/**'
       - '.github/workflows/mobile-release-status.yml'
   push:
@@ -22,16 +23,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  status:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Validate read-only report
+        with:
+          persist-credentials: false
+      - name: Test dashboard and evidence boundaries
         run: python3 -m unittest discover -s mobile-releases -p 'test_*.py'
-      - name: Preview report (offline for PRs)
-        if: github.event_name == 'pull_request'
-        run: python3 mobile-releases/status.py >> "$GITHUB_STEP_SUMMARY"
-      - name: Refresh public evidence
-        if: github.event_name != 'pull_request'
-        run: python3 mobile-releases/status.py --live >> "$GITHUB_STEP_SUMMARY"
+      - name: Preview dashboard offline
+        run: python3 mobile-releases/status.py --homepage >> "$GITHUB_STEP_SUMMARY"
+
+  refresh:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Refresh homepage with public evidence
+        run: python3 mobile-releases/status.py --live --update-readme >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish dashboard to this repository only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --quiet -- README.md && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- README.md
+          git commit -m "Refresh mobile release dashboard"
+          git push origin HEAD:main

@@ -146,13 +146,108 @@ def render(registry, fetch, now):
               "Failures and unavailable routes require investigation; do not infer release blockers from a workflow result alone."]
     return "\n".join(lines) + "\n"
 
+
+START = "<!-- dashboard:start -->"
+END = "<!-- dashboard:end -->"
+DEV_VERSION = re.compile(r"[0-9]+(?:\.[0-9]+){0,3}(?:-alpha[0-9]+)?")
+SOURCE_PATH = re.compile(r"[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*")
+
+def read_text(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "mobile-release-status/2"}, method="GET")
+    try:
+        with urllib.request.urlopen(req, timeout=12) as response:
+            return response.read(2_000_000).decode("utf-8")
+    except (OSError, ValueError):
+        return None
+
+def development(app, route, fetch_text):
+    spec = route.get("development")
+    if not spec or not valid(SOURCE_PATH, spec.get("path")) or ".." in spec["path"].split("/"):
+        return UNKNOWN
+    path, repo = spec["path"], app["source"]
+    data = fetch_text(f"https://raw.githubusercontent.com/{repo}/main/{path}")
+    if not isinstance(data, str):
+        return UNKNOWN
+    try:
+        if "key" in spec:
+            value = json.loads(data)
+            for key in spec["key"].split("."):
+                value = value[key]
+        else:
+            values = list(dict.fromkeys(re.findall(spec["pattern"], data)))
+            index = spec.get("index")
+            if len(values) != (1 if index is None else 2):
+                return UNKNOWN
+            value = values[0 if index is None else index]
+    except (ValueError, TypeError, KeyError, IndexError, re.error):
+        return UNKNOWN
+    if not valid(DEV_VERSION, value):
+        return UNKNOWN
+    return f"[{value}](https://github.com/{repo}/blob/main/{path})"
+
+def play_listing(route):
+    package = route.get("package")
+    if valid(BUNDLE, package):
+        return f"[Store page](https://play.google.com/store/apps/details?id={package}) · unverified"
+    return UNKNOWN
+
+def homepage(registry, fetch, fetch_text, now):
+    apps = validate_registry(registry)
+    lines = [
+        f"**Last checked:** {now} UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)",
+        "", "### Store releases", "",
+        "| App | iOS public (US) | TestFlight | Google Play public | Play testing |",
+        "|---|---|---|---|---|"]
+    for app in apps:
+        ios, android = app["ios"], app["android"]
+        lines.append(f"| [{app['name']}](https://github.com/{app['source']}) | {apple_public(ios, fetch)} | {UNKNOWN} | {play_listing(android)} | {UNKNOWN} |")
+    lines += ["", "Apple public versions come from exact-bundle lookup. Play links identify the app, not its availability. Testing and Play production versions require authenticated store read-back. **Not verified** means unknown, not unreleased.",
+              "", "### Development and next release", "",
+              "| App | iOS source | iOS request | Android source | Android request |",
+              "|---|---|---|---|---|"]
+    cache = {}
+    def cached_text(url):
+        if url not in cache:
+            cache[url] = fetch_text(url)
+        return cache[url]
+    for app in apps:
+        ios, android = app["ios"], app["android"]
+        lines.append(f"| {app['name']} | {development(app, ios, cached_text)} | {requested(app, ios, fetch)} | {development(app, android, cached_text)} | {requested(app, android, fetch)} |")
+    lines += ["", "Source versions are configuration values on main (possibly overridden by release workflows). A request is not a build or release.",
+              "", "### Build and submission evidence", "",
+              "| App | iOS release workflow | Android release workflow |",
+              "|---|---|---|"]
+    for app in apps:
+        lines.append(f"| {app['name']} | {workflow_run(app['ios'], fetch)} | {workflow_run(app['android'], fetch)} |")
+    lines += ["", "A successful workflow is not proof of store delivery; signed/uploaded, processing, review submission and tester availability require separate evidence."]
+    return "\n".join(lines) + "\n"
+
+def replace_dashboard(readme, report):
+    if readme.count(START) != 1 or readme.count(END) != 1:
+        raise ValueError("README must have exactly one dashboard block")
+    before, tail = readme.split(START, 1)
+    _, after = tail.split(END, 1)
+    return before + START + "\n\n" + report.rstrip() + "\n\n" + END + after
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", help="Read public GitHub and Apple listing APIs")
+    parser.add_argument("--homepage", action="store_true", help="Render homepage dashboard")
+    parser.add_argument("--update-readme", action="store_true", help="Update generated README section")
     args = parser.parse_args()
+    if args.update_readme and not args.live:
+        parser.error("--update-readme requires --live")
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
-    print(render(registry, read_json if args.live else lambda _: None, now), end="")
+    fetch = read_json if args.live else lambda _: None
+    if args.homepage or args.update_readme:
+        report = homepage(registry, fetch, read_text if args.live else lambda _: None, now)
+        if args.update_readme:
+            path = REGISTRY.parent.parent / "README.md"
+            path.write_text(replace_dashboard(path.read_text(encoding="utf-8"), report), encoding="utf-8")
+        print(report, end="")
+    else:
+        print(render(registry, fetch, now), end="")
 
 if __name__ == "__main__":
     main()
