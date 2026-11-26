@@ -1,6 +1,7 @@
 import json
 import unittest
 import status
+import store_status
 
 class StatusTests(unittest.TestCase):
     def setUp(self):
@@ -48,7 +49,7 @@ class StatusTests(unittest.TestCase):
         self.assertIn("### Development and next release", report)
         for app in self.registry["apps"]:
             self.assertIn(app["name"], report)
-        self.assertIn("not its availability", report)
+        self.assertIn("not a claim the app does not exist", report)
         self.assertNotIn("TestFlight available", report)
 
     def test_development_version(self):
@@ -63,6 +64,24 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(status.replace_dashboard(source, "new\n"), "# Mobile Releases\n\n" + status.START + "\n\nnew\n\n" + status.END + "\n\nFooter\n")
         with self.assertRaises(ValueError):
             status.replace_dashboard("# missing markers", "new")
+
+    def test_store_evidence_distinguishes_draft_and_published(self):
+        app = {"id":"star-run","ios":{"bundle":"com.rsm.starrun"},"android":{"package":"com.rsm.starrun"}}
+        doc = {"schema_version":1,"checked_at":"2026-11-26T12:00:00Z","run_id":"123","apps":{"star-run":{"package":"com.rsm.starrun","tracks":{"production":{"result":"ok","releases":[]},"internal":{"result":"ok","releases":[{"state":"DRAFT","codes":["14"]},{"state":"PUBLISHED","codes":["2"]}]}}}}}
+        _, _, _, production, testing = store_status.cells(app,None,doc,status.UNKNOWN)
+        self.assertIn("No active releases returned",production)
+        self.assertIn("Code 14 draft, not available",testing)
+        self.assertIn("Code 2 published on track",testing)
+        doc["apps"]["star-run"]["package"]="wrong"
+        self.assertIsNone(store_status.play(doc,"star-run","com.rsm.starrun","internal"))
+
+    def test_apple_beta_and_review_separate(self):
+        doc = {"schema_version":1,"checked_at":"2026-11-26T12:00:00Z","run_id":"123","apps":{"star-run":{"bundle":"com.rsm.starrun","result":"ok","builds":[{"version":"1.4","build":"1100","processing":"PROCESSING","expired":False},{"version":"1.3","build":"1099","processing":"VALID","internal":"IN_BETA_TESTING","expired":False}],"versions":[{"version":"1.2","state":"READY_FOR_DISTRIBUTION"},{"version":"1.3","state":"IN_REVIEW"}]}}}
+        live,beta,review = store_status.apple(doc,"star-run","com.rsm.starrun")
+        self.assertIn("1.2 ready for distribution (ASC)",live)
+        self.assertIn("1.3 (1099) in beta testing",beta)
+        self.assertIn("1.4 (1100) processing",beta)
+        self.assertIn("1.3 in review",review)
 
     def test_malformed_evidence(self):
         route = {"repo":"killjoy00/EZTrivia","workflow":"testflight.yml"}

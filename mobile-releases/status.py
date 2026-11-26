@@ -8,6 +8,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+import store_status
 
 REGISTRY = Path(__file__).with_name("apps.json")
 SHA = re.compile(r"[0-9a-f]{40}")
@@ -193,15 +194,18 @@ def play_listing(route):
 
 def homepage(registry, fetch, fetch_text, now):
     apps = validate_registry(registry)
+    apple_doc = fetch(store_status.APPLE_URL)
+    play_doc = fetch(store_status.PLAY_URL)
     lines = [
         f"**Last checked:** {now} UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)",
         "", "### Store releases", "",
-        "| App | iOS public (US) | TestFlight | Google Play public | Play testing |",
-        "|---|---|---|---|---|"]
+        "| App | iOS public / ASC status | TestFlight | Apple review | Google Play production | Play internal testing |",
+        "|---|---|---|---|---|---|"]
     for app in apps:
-        ios, android = app["ios"], app["android"]
-        lines.append(f"| [{app['name']}](https://github.com/{app['source']}) | {apple_public(ios, fetch)} | {UNKNOWN} | {play_listing(android)} | {UNKNOWN} |")
-    lines += ["", "Apple public versions come from exact-bundle lookup. Play links identify the app, not its availability. Testing and Play production versions require authenticated store read-back. **Not verified** means unknown, not unreleased.",
+        ios = app["ios"]
+        values = store_status.cells(app, apple_doc, play_doc, apple_public(ios, fetch))
+        lines.append(f"| [{app['name']}](https://github.com/{app['source']}) | " + " | ".join(values) + " |")
+    lines += ["", "US Apple listings and dated provider checks are separate. Play published-on-track status may include staged or halted rollouts; it is not proof of universal public availability. Each dated result links to its evidence. **Awaiting store check** means evidence is missing; **Not tracked** means no configured route, not a claim the app does not exist.",
               "", "### Development and next release", "",
               "| App | iOS source | iOS request | Android source | Android request |",
               "|---|---|---|---|---|"]
