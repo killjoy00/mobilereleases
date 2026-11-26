@@ -20,3 +20,5 @@ No new paid services or libraries. Run offline validation with `python3 -m unitt
 ## Store status sources
 
 The dashboard reads strictly validated public release-status snapshots from the repository that owns the app's credentials. EZTrivia serves its shared apps; Pack One and Gold Rush serve their own. No credential is copied to the tracker. Each provider observation has its own verification time and workflow link; evidence more than 36 hours old is marked stale. Gold Rush's configured default bundle must match the actual verified app record before reporting a version. Android status uses version codes because the direct store lifecycle API does not return a reliable marketing version name. Never infer one from source defaults or current requests.
+
+Pack One publishes the same validated snapshot schema to its dedicated [status issue #1867](https://github.com/killjoy00/mtg-ev-analyzer/issues/1867), not a protected-main file. The tracker reads the exact issue marker and validates app identity and timestamp as for file-based sources. No branch protection exceptions or credentials in the tracker are required.

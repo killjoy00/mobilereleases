@@ -198,7 +198,7 @@ def homepage(registry, fetch, fetch_text, now):
     for app in apps:
         repo = app.get("status_repo")
         if repo in store_status.TRUSTED_PUBLISHERS and repo not in sources:
-            sources[repo] = tuple(fetch(store_status.snapshot_url(repo,p)) for p in ("apple","play"))
+            sources[repo] = store_status.snapshots(repo,fetch)
     lines = [
         f"**Last checked:** {now} UTC · [Refresh history](https://github.com/killjoy00/mobilereleases/actions/workflows/mobile-release-status.yml)",
         "", "### Store releases", "",

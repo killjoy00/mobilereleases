@@ -4,6 +4,7 @@ Never treat a build/request, draft, or approved-not-published release as live.
 Only the publisher-produced GET snapshots establish current store lifecycle.
 """
 import re
+import json
 import datetime as dt
 
 APPLE_URL="https://raw.githubusercontent.com/killjoy00/EZTrivia/main/release-status/apple.json"
@@ -59,6 +60,35 @@ HISTORICAL={
 
 def valid(pattern,value):
     return isinstance(value,str) and pattern.fullmatch(value) is not None
+
+
+PACKONE_STATUS_ISSUE=1867
+PACKONE_ISSUE_URL="https://api.github.com/repos/killjoy00/mtg-ev-analyzer/issues/1867"
+ISSUE_MARKER=re.compile(r"<!-- portfolio-status:start -->\n"+r"\x60{3}json\n(.*?)\n\x60{3}\n<!-- portfolio-status:end -->",re.S)
+
+def issue_snapshots(issue):
+    if not isinstance(issue,dict) or issue.get("number")!=PACKONE_STATUS_ISSUE or "pull_request" in issue:
+        return None,None
+    body=issue.get("body")
+    if not isinstance(body,str):
+        return None,None
+    matches=ISSUE_MARKER.findall(body)
+    if len(matches)!=1:
+        return None,None
+    try:
+        doc=json.loads(matches[0])
+    except (ValueError,TypeError):
+        return None,None
+    if not isinstance(doc,dict) or not set(doc)<={"apple","play"}:
+        return None,None
+    return doc.get("apple"),doc.get("play")
+
+def snapshots(repo,fetch):
+    if repo=="killjoy00/mtg-ev-analyzer":
+        return issue_snapshots(fetch(PACKONE_ISSUE_URL))
+    if repo in TRUSTED_PUBLISHERS:
+        return tuple(fetch(snapshot_url(repo,p)) for p in ("apple","play"))
+    return None,None
 
 def source(doc,app,field,identity,repo="killjoy00/EZTrivia",now=None):
     if repo not in TRUSTED_PUBLISHERS:
