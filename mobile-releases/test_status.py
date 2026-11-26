@@ -42,6 +42,28 @@ class StatusTests(unittest.TestCase):
         data["repository"] = "wrong"
         self.assertEqual(status.requested(app, route, lambda _: data), status.UNKNOWN)
 
+    def test_homepage(self):
+        report = status.homepage(self.registry, lambda _: None, lambda _: None, "2026-11-26 00:00")
+        self.assertIn("### Store releases", report)
+        self.assertIn("### Development and next release", report)
+        for app in self.registry["apps"]:
+            self.assertIn(app["name"], report)
+        self.assertIn("not its availability", report)
+        self.assertNotIn("TestFlight available", report)
+
+    def test_development_version(self):
+        app = {"source":"killjoy00/Starport"}
+        route = {"development":{"path":"project.pbxproj","pattern":r"MARKETING_VERSION = ([0-9.]+);","index":1}}
+        source = "MARKETING_VERSION = 0.4.0;\nMARKETING_VERSION = 0.4.0;\nMARKETING_VERSION = 0.1.4;"
+        self.assertIn("[0.1.4]", status.development(app, route, lambda _: source))
+        self.assertEqual(status.development(app, route, lambda _: source + "\nMARKETING_VERSION = 9.0;"), status.UNKNOWN)
+
+    def test_update_readme_only_generated_block(self):
+        source = "# Mobile Releases\n\n" + status.START + "\nold\n" + status.END + "\n\nFooter\n"
+        self.assertEqual(status.replace_dashboard(source, "new\n"), "# Mobile Releases\n\n" + status.START + "\n\nnew\n\n" + status.END + "\n\nFooter\n")
+        with self.assertRaises(ValueError):
+            status.replace_dashboard("# missing markers", "new")
+
     def test_malformed_evidence(self):
         route = {"repo":"killjoy00/EZTrivia","workflow":"testflight.yml"}
         self.assertEqual(status.workflow_run(route, lambda _: {"workflow_runs":[{"id":"bad","conclusion":"success"}]}), status.UNKNOWN)

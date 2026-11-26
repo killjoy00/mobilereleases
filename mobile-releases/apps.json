@@ -10,13 +10,22 @@
         "repo": "killjoy00/mtg-ev-analyzer",
         "workflow": "ios-testflight.yml",
         "request": ".github/testflight-release-request.json",
-        "guide": "docs/mobile-release-runbook.md"
+        "guide": "docs/mobile-release-runbook.md",
+        "development": {
+          "path": "mobile/store-release.json",
+          "key": "appStoreVersion"
+        }
       },
       "android": {
         "repo": "killjoy00/mtg-ev-analyzer",
         "workflow": "android-internal-testing.yml",
         "request": ".github/android-internal-release-request.json",
-        "guide": "docs/mobile-release-runbook.md"
+        "guide": "docs/mobile-release-runbook.md",
+        "package": "pro.packone.app",
+        "development": {
+          "path": "mobile/store-release.json",
+          "key": "playVersionName"
+        }
       }
     },
     {
@@ -28,12 +37,21 @@
         "repo": "killjoy00/EZTrivia",
         "workflow": "testflight.yml",
         "request": ".github/eztrivia-testflight-request.json",
-        "guide": "RELEASE_SETUP.md"
+        "guide": "RELEASE_SETUP.md",
+        "development": {
+          "path": "EZTrivia.xcodeproj/project.pbxproj",
+          "pattern": "MARKETING_VERSION\\s*=\\s*([0-9.]+)\\s*;"
+        }
       },
       "android": {
         "repo": "killjoy00/EZTrivia",
         "workflow": "android-play-internal.yml",
-        "guide": "android/PRODUCTION_RELEASE.md"
+        "guide": "android/PRODUCTION_RELEASE.md",
+        "package": "com.rsm.eztrivia",
+        "development": {
+          "path": "android/app/build.gradle.kts",
+          "pattern": "versionName\\s*=\\s*releaseVersionName\\s*\\?:\\s*\"([0-9.]+(?:-alpha[0-9]+)?)\""
+        }
       }
     },
     {
@@ -43,13 +61,22 @@
       "ios": {
         "repo": "killjoy00/GoldRush",
         "workflow": "testflight.yml",
-        "guide": "docs/DEPLOYMENT.md"
+        "guide": "docs/DEPLOYMENT.md",
+        "development": {
+          "path": "App/GoldRush.xcodeproj/project.pbxproj",
+          "pattern": "MARKETING_VERSION\\s*=\\s*([0-9.]+)\\s*;"
+        }
       },
       "android": {
         "repo": "killjoy00/GoldRush",
         "workflow": "android-play-release.yml",
         "branch": "play-release",
-        "guide": "docs/DEPLOYMENT.md"
+        "guide": "docs/DEPLOYMENT.md",
+        "package": "com.killjoy00.goldrush",
+        "development": {
+          "path": "Android/app/build.gradle.kts",
+          "pattern": "versionName\\s*=\\s*\"([0-9.]+)\""
+        }
       }
     },
     {
@@ -60,12 +87,21 @@
         "bundle": "com.killjoy00.ultttt",
         "repo": "killjoy00/EZTrivia",
         "workflow": "ultttt-testflight.yml",
-        "request": ".github/ultttt-testflight-request.json"
+        "request": ".github/ultttt-testflight-request.json",
+        "development": {
+          "path": "project.yml",
+          "pattern": "MARKETING_VERSION:\\s*\"([0-9.]+)\""
+        }
       },
       "android": {
         "repo": "killjoy00/EZTrivia",
         "guide": "android/PLAY_RELEASE.md",
-        "note": "Version-specific adapters; inspect current source and approval before selecting a workflow."
+        "note": "Version-specific adapters; inspect current source and approval before selecting a workflow.",
+        "package": "com.killjoy00.ultttt",
+        "development": {
+          "path": "android/app/build.gradle.kts",
+          "pattern": "versionName\\s*=\\s*releaseVersionName\\s*\\?:\\s*\"([0-9.]+)\""
+        }
       }
     },
     {
@@ -77,13 +113,22 @@
         "repo": "killjoy00/EZTrivia",
         "workflow": "starrun-testflight.yml",
         "request": ".github/starrun-release-request.json",
-        "guide": "docs/NATIVE_DELIVERY.md"
+        "guide": "docs/NATIVE_DELIVERY.md",
+        "development": {
+          "path": "export_presets.cfg",
+          "pattern": "application/short_version=\"([0-9.]+)\""
+        }
       },
       "android": {
         "repo": "killjoy00/EZTrivia",
         "workflow": "starrun-play-internal.yml",
         "request": ".github/starrun-android-release-request.json",
-        "guide": "docs/ANDROID_GOOGLE_PLAY.md"
+        "guide": "docs/ANDROID_GOOGLE_PLAY.md",
+        "package": "com.rsm.starrun",
+        "development": {
+          "path": "export_presets.cfg",
+          "pattern": "version/name=\"([0-9.]+)\""
+        }
       }
     },
     {
@@ -94,12 +139,21 @@
         "bundle": "org.killjoy00.ministry",
         "repo": "killjoy00/EZTrivia",
         "workflow": "ministry-testflight.yml",
-        "request": ".github/ministry-testflight-request.json"
+        "request": ".github/ministry-testflight-request.json",
+        "development": {
+          "path": "export_presets.cfg",
+          "pattern": "application/short_version=\"([0-9.]+)\""
+        }
       },
       "android": {
         "repo": "killjoy00/EZTrivia",
         "workflow": "ministry-play-internal.yml",
-        "request": ".github/ministry-android-release-request.json"
+        "request": ".github/ministry-android-release-request.json",
+        "package": "org.killjoy00.ministry",
+        "development": {
+          "path": "export_presets.cfg",
+          "pattern": "version/name=\"([0-9.]+)\""
+        }
       }
     },
     {
@@ -110,7 +164,12 @@
         "bundle": "pro.starport.story",
         "repo": "killjoy00/EZTrivia",
         "workflow": "starport-testflight.yml",
-        "request": ".github/starport-release-request.json"
+        "request": ".github/starport-release-request.json",
+        "development": {
+          "path": "Starport.xcodeproj/project.pbxproj",
+          "pattern": "MARKETING_VERSION\\s*=\\s*([0-9.]+)\\s*;",
+          "index": 0
+        }
       },
       "android": {
         "note": "No signed Android release route verified."
@@ -124,7 +183,12 @@
         "bundle": "pro.stuffyland.stories",
         "repo": "killjoy00/EZTrivia",
         "workflow": "stuffyland-testflight.yml",
-        "request": ".github/stuffyland-release-request.json"
+        "request": ".github/stuffyland-release-request.json",
+        "development": {
+          "path": "Starport.xcodeproj/project.pbxproj",
+          "pattern": "MARKETING_VERSION\\s*=\\s*([0-9.]+)\\s*;",
+          "index": 1
+        }
       },
       "android": {
         "note": "No signed Android release route verified."
@@ -136,7 +200,12 @@
       "source": "killjoy00/foodfinder",
       "ios": {
         "guide": "mobile/GETTING-STARTED.md",
-        "note": "EAS documented; signed release route not verified."
+        "note": "EAS documented; signed release route not verified.",
+        "bundle": "com.mindellfamily.foodfinder",
+        "development": {
+          "path": "mobile/app.json",
+          "key": "expo.version"
+        }
       },
       "android": {
         "note": "No signed Android release route verified."
