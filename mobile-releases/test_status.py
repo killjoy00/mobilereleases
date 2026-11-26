@@ -136,6 +136,17 @@ class StatusTests(unittest.TestCase):
         self.assertIn("### Build and submission evidence",details)
         self.assertTrue(report.rstrip().endswith("</details>"))
 
+    def test_ministry_owner_confirmation_is_fallback_only(self):
+        app=next(a for a in self.registry["apps"] if a["id"]=="ministry")
+        doc={"schema_version":1,"checked_at":"2026-11-26T20:24:00Z","run_id":"124","apps":{"ministry":{"package":"org.killjoy00.ministry","tracks":{"production":{"result":"unavailable","releases":[]},"internal":{"result":"ok","releases":[{"state":"PUBLISHED","codes":["4"]}]}}}}}
+        result=store_status.cells(app,None,doc,status.UNKNOWN,"2026-11-26 21:00")
+        self.assertEqual(result[3],"Not live (owner confirmed Nov 26)")
+        self.assertIn("Code 4 published",result[4])
+        doc["apps"]["ministry"]["tracks"]["production"]={"result":"ok","releases":[{"state":"PUBLISHED","codes":["5"]}]}
+        result=store_status.cells(app,None,doc,status.UNKNOWN,"2026-11-26 21:00")
+        self.assertIn("Code 5 published",result[3])
+        self.assertNotIn("owner confirmed",result[3])
+
     def test_malformed_evidence(self):
         route = {"repo":"killjoy00/EZTrivia","workflow":"testflight.yml"}
         self.assertEqual(status.workflow_run(route, lambda _: {"workflow_runs":[{"id":"bad","conclusion":"success"}]}), status.UNKNOWN)
